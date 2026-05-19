@@ -20,7 +20,7 @@ Built per **AW Client Report Portal PRD v1.0** (Sagan AI Engineer Test).
 | Database | SQLite (`RAILWAY_DATABASE_PATH` or `./data/portal.db`) |
 | Frontend | HTML, CSS, JavaScript |
 | PDF | ReportLab |
-| Deploy | Railway (Gunicorn) |
+| Deploy | Vercel (serverless) or Railway (Gunicorn) |
 
 ## Quick Start
 
@@ -37,9 +37,30 @@ Open [http://127.0.0.1:5000](http://127.0.0.1:5000). A demo **Smith Family** cli
 
 | Variable | Description |
 |----------|-------------|
-| `RAILWAY_DATABASE_PATH` | SQLite file path (Railway volume) |
+| `DATABASE_PATH` | SQLite file path (any host) |
+| `RAILWAY_DATABASE_PATH` | SQLite file path (Railway volume; alias for `DATABASE_PATH`) |
 | `PORT` | HTTP port (Railway sets automatically) |
 | `SECRET_KEY` | Flask session secret (production) |
+
+## Vercel Deploy
+
+1. Install the [Vercel CLI](https://vercel.com/docs/cli) (v48.2.10+).
+2. From the project root, run `vercel` and follow the prompts (or connect the repo in the Vercel dashboard).
+3. Set environment variables in the project:
+   - `SECRET_KEY` — a strong random string (required for production).
+   - `DATABASE_PATH` — optional; defaults to `/tmp/portal.db` on Vercel.
+4. Deploy with `vercel --prod`.
+
+Vercel detects this app via `pyproject.toml` (`entrypoint = "run:app"`) and `requirements.txt`. No `vercel.json` is required.
+
+**SQLite on Vercel:** Serverless functions use an ephemeral filesystem. Data in `/tmp` does not persist across deployments and may reset between cold starts. For production persistence, use a hosted database (e.g. [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), Turso) and point `DATABASE_PATH` at a supported location, or keep Railway with a volume for SQLite.
+
+Local preview with Vercel:
+
+```bash
+pip install -r requirements.txt
+vercel dev
+```
 
 ## Railway Deploy
 

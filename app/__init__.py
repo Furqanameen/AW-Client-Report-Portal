@@ -7,6 +7,16 @@ from app.database import init_db
 from app.routes import api_bp, web_bp
 
 
+def _database_path() -> str:
+    if path := os.environ.get("DATABASE_PATH"):
+        return path
+    if path := os.environ.get("RAILWAY_DATABASE_PATH"):
+        return path
+    if os.environ.get("VERCEL"):
+        return "/tmp/portal.db"
+    return str(Path(__file__).parent.parent / "data" / "portal.db")
+
+
 def create_app():
     app = Flask(
         __name__,
@@ -14,8 +24,7 @@ def create_app():
         static_folder=str(Path(__file__).parent.parent / "static"),
     )
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
-    default_db = Path(__file__).parent.parent / "data" / "portal.db"
-    app.config["DATABASE_PATH"] = os.environ.get("RAILWAY_DATABASE_PATH", str(default_db))
+    app.config["DATABASE_PATH"] = _database_path()
 
     init_db(app)
     app.register_blueprint(web_bp)
