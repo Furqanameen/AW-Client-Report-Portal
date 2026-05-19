@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Clients — AW Portal{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1>Clients</h1>
+    <p class="muted">Manage profiles and generate quarterly SACS &amp; TCC reports.</p>
+  </div>
+  <a href="/clients/new" class="btn btn-primary">+ Add Client</a>
+</section>
+<div id="client-list" class="client-grid">
+  <p class="muted">Loading clients…</p>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => Portal.renderClientList());
+</script>
+{% endblock %}

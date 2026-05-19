@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Generate Report — AW Portal{% endblock %}
+{% block content %}
+<div id="report-entry">
+  <p class="muted">Loading report form…</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Portal.initReportEntry({{ client_id }});
+  });
+</script>
+{% endblock %}

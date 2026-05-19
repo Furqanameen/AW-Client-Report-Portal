@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Client — AW Portal{% endblock %}
+{% block content %}
+<div id="client-detail">
+  <p class="muted">Loading…</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Portal.renderClientDetail({{ client_id }});
+  });
+</script>
+{% endblock %}

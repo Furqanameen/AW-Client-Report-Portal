@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Client Profile — AW Portal{% endblock %}
+{% block content %}
+<section class="page-header">
+  <div>
+    <h1 id="form-title">Client Profile</h1>
+    <p class="muted">Enter static client information once — reused every quarter.</p>
+  </div>
+</section>
+<form id="client-form" class="card form-card"></form>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Portal.initClientForm({{ client_id|default('null') }});
+  });
+</script>
+{% endblock %}

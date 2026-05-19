@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Report Ready — AW Portal{% endblock %}
+{% block content %}
+<div id="report-complete">
+  <p class="muted">Loading…</p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    Portal.renderReportComplete({{ client_id }}, {{ report_id }});
+  });
+</script>
+{% endblock %}
