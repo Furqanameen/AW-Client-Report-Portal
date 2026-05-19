@@ -7,14 +7,20 @@ from pathlib import Path
 from flask import Flask, g
 
 
+def connect_db(database_path: str) -> sqlite3.Connection:
+    conn = sqlite3.connect(database_path, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
 def init_db(app: Flask):
-    Path(app.config["DATABASE_PATH"]).parent.mkdir(parents=True, exist_ok=True)
+    db_path = app.config["DATABASE_PATH"]
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
 
     @app.before_request
     def open_db():
-        g.db = sqlite3.connect(app.config["DATABASE_PATH"])
-        g.db.row_factory = sqlite3.Row
-        g.db.execute("PRAGMA foreign_keys = ON")
+        g.db = connect_db(db_path)
 
     @app.teardown_request
     def close_db(_exc):
@@ -22,16 +28,16 @@ def init_db(app: Flask):
         if db is not None:
             db.close()
 
-    with app.app_context():
-        _migrate(get_db(app))
+    conn = connect_db(db_path)
+    try:
+        _migrate(conn)
+    finally:
+        conn.close()
 
 
 def get_db(app: Flask | None = None):
     if app is not None:
-        conn = sqlite3.connect(app.config["DATABASE_PATH"])
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA foreign_keys = ON")
-        return conn
+        return connect_db(app.config["DATABASE_PATH"])
     return g.db
 
 

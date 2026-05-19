@@ -1,8 +1,7 @@
+"""Local development server. Vercel uses wsgi.py (see pyproject.toml)."""
 import os
 
-from app import create_app
-
-app = create_app()
+from wsgi import app
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

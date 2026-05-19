@@ -2,6 +2,10 @@
 name = "aw-client-report-portal"
 version = "1.0.0"
 requires-python = ">=3.12"
+dependencies = [
+    "flask==3.0.3",
+    "reportlab==4.2.5",
+]
 
 [tool.vercel]
-entrypoint = "run:app"
+entrypoint = "wsgi:app"

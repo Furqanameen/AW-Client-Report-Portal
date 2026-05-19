@@ -51,7 +51,9 @@ Open [http://127.0.0.1:5000](http://127.0.0.1:5000). A demo **Smith Family** cli
    - `DATABASE_PATH` — optional; defaults to `/tmp/portal.db` on Vercel.
 4. Deploy with `vercel --prod`.
 
-Vercel detects this app via `pyproject.toml` (`entrypoint = "run:app"`) and `requirements.txt`. No `vercel.json` is required.
+Vercel installs dependencies from `pyproject.toml` and loads the app via `entrypoint = "wsgi:app"`. Keep `requirements.txt` for local dev and Railway (`gunicorn` is listed there only).
+
+Do **not** set `DATABASE_PATH` to a project-relative path (e.g. `data/portal.db`) on Vercel — the deployment filesystem is read-only except `/tmp`. The app auto-uses `/tmp/portal.db` on Vercel when `DATABASE_PATH` is unset.
 
 **SQLite on Vercel:** Serverless functions use an ephemeral filesystem. Data in `/tmp` does not persist across deployments and may reset between cold starts. For production persistence, use a hosted database (e.g. [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres), Turso) and point `DATABASE_PATH` at a supported location, or keep Railway with a volume for SQLite.
 
